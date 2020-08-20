@@ -1,17 +1,18 @@
 import subprocess
 import os
 import discord
+import logging
 from discord.ext import tasks
 
 import settings
 
 TOKEN = settings.BOT_TOKEN
 
-TIT_cmd = 'mkdir -p TIT && cd TIT && wget https://admissions.titech.ac.jp/examination/ -O $(date "+%Y%m%d-%H%M") -q'
-UO_cmd = 'mkdir -p UO && cd UO && wget https://www.osaka-u.ac.jp/ja/admissions/faculty -O $(date "+%Y%m%d-%H%M") -q'
-SU_cmd = 'mkdir -p SU && cd SU && wget http://www.saitama-u.ac.jp/entrance/requirements/ -O $(date "+%Y%m%d-%H%M") -q'
-KU_cmd = 'mkdir -p KU && cd KU && wget https://www.keio.ac.jp/ja/admissions/ -O $(date "+%Y%m%d-%H%M") -q'
-THU_cmd = 'mkdir -p THU && cd THU && wget http://www.tnc.tohoku.ac.jp/ -O $(date "+%Y%m%d-%H%M") -q'
+TIT_cmd = 'mkdir -p tmp/TIT && cd tmp/TIT && wget https://admissions.titech.ac.jp/examination/ -O $(date "+%Y%m%d-%H%M") -q'
+UO_cmd = 'mkdir -p tmp/UO && cd tmp/UO && wget https://www.osaka-u.ac.jp/ja/admissions/faculty -O $(date "+%Y%m%d-%H%M") -q'
+SU_cmd = 'mkdir -p tmp/SU && cd tmp/SU && wget http://www.saitama-u.ac.jp/entrance/requirements/ -O $(date "+%Y%m%d-%H%M") -q'
+KU_cmd = 'mkdir -p tmp/KU && cd tmp/KU && wget https://www.keio.ac.jp/ja/admissions/ -O $(date "+%Y%m%d-%H%M") -q'
+THU_cmd = 'mkdir -p tmp/THU && cd tmp/THU && wget http://www.tnc.tohoku.ac.jp/ -O $(date "+%Y%m%d-%H%M") -q'
 
 TIT_flag = False
 UO_flag = False
@@ -57,7 +58,7 @@ def diff():
     print('error5')
 	
   #diff in TIT directory
-  TIT_find = 'find TIT -type f -a  -amin -35'
+  TIT_find = 'find tmp/TIT -type f -a  -amin -35'
   TIT_data = subprocess.check_output(TIT_find.split())
   TIT_diff_cmd = 'diff' + ' ' + TIT_data.decode().splitlines()[0] + ' ' + TIT_data.decode().splitlines()[1]
   try:
@@ -70,7 +71,7 @@ def diff():
     print('1_diff!')
 
   #diff in UO directory
-  UO_find = 'find UO -type f -a  -amin -35'
+  UO_find = 'find tmp/UO -type f -a  -amin -35'
   UO_data = subprocess.check_output(UO_find.split())
   UO_diff_cmd = 'diff' + ' ' + UO_data.decode().splitlines()[0] + ' ' + UO_data.decode().splitlines()[1]
   try:
@@ -83,7 +84,7 @@ def diff():
     print('2_diff!')
 
   #diff in SU directory
-  SU_find = 'find SU -type f -a  -amin -35'
+  SU_find = 'find tmp/SU -type f -a  -amin -35'
   SU_data = subprocess.check_output(SU_find.split())
   SU_diff_cmd = 'diff' + ' ' + SU_data.decode().splitlines()[0] + ' ' + SU_data.decode().splitlines()[1]
   try:
@@ -96,7 +97,7 @@ def diff():
     print('3_diff!')
 
   #diff in KU directory
-  KU_find = 'find KU -type f -a  -amin -35'
+  KU_find = 'find tmp/KU -type f -a  -amin -35'
   KU_data = subprocess.check_output(KU_find.split())
   KU_diff_cmd = 'diff' + ' ' + KU_data.decode().splitlines()[0] + ' ' + KU_data.decode().splitlines()[1]
   try:
@@ -109,7 +110,7 @@ def diff():
     print('4_diff!')
 
   #diff in THU directory
-  THU_find = 'find THU -type f -a  -amin -35'
+  THU_find = 'find tmp/THU -type f -a  -amin -35'
   THU_data = subprocess.check_output(THU_find.split())
   THU_diff_cmd = 'diff' + ' ' + THU_data.decode().splitlines()[0] + ' ' + THU_data.decode().splitlines()[1]
   try:
@@ -126,6 +127,7 @@ def diff():
 async def on_ready():
     # 起動したらターミナルにログイン通知が表示される
     print('ログインしました')
+    loop.start()
 
 @client.event
 async def on_message(message):
@@ -154,12 +156,12 @@ async def on_message(message):
       if THU_flag == False and KU_flag == False and SU_flag == False and UO_flag == False and TIT_flag == False:
         await message.channel.send('各大学ホームページに更新はありません')
       
-      find = 'find TIT -type f -a  -amin -35'
+      find = 'find tmp/TIT -type f -a  -amin -35'
       data = subprocess.check_output(find.split())
       rep = '期間 : ' + data.decode().splitlines()[0] + ' ' + 'から' + ' ' + data.decode().splitlines()[1]
       await message.channel.send(rep)
 
-@tasks.loop(seconds=1800)
+@tasks.loop(seconds=80)
 async def loop():
     channel = client.get_channel(743522168478105649)
     
@@ -183,11 +185,10 @@ async def loop():
     if THU_flag == False and KU_flag == False and SU_flag == False and UO_flag == False and TIT_flag == False:
       await channel.send('各大学ホームページに更新はありません')
     
-    find = 'find TIT -type f -a  -amin -35'
+    find = 'find tmp/TIT -type f -a  -amin -35'
     data = subprocess.check_output(find.split())
     rep = '期間 : ' + data.decode().splitlines()[0] + ' ' + 'から' + ' ' + data.decode().splitlines()[1]
     await channel.send(rep)
 
-loop.start()
 
 client.run(TOKEN)
