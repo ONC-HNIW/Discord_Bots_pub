@@ -7,11 +7,11 @@ import settings
 
 TOKEN = settings.BOT_TOKEN
 
-TIT_cmd = 'mkdir -p TIT && cd TIT && wget https://admissions.titech.ac.jp/examination/ -O $(date "+%Y%m%d-%H%M") -o wget.log'
-UO_cmd = 'mkdir -p UO && cd UO && wget https://www.osaka-u.ac.jp/ja/admissions/faculty -O $(date "+%Y%m%d-%H%M") -o wget.log'
-SU_cmd = 'mkdir -p SU && cd SU && wget http://www.saitama-u.ac.jp/entrance/requirements/ -O d -o wget.log'
-KU_cmd = 'mkdir -p KU && cd KU && wget https://www.keio.ac.jp/ja/admissions/ -O $(date "+%Y%m%d-%H%M") -o wget.log'
-THU_cmd = 'mkdir -p THU && cd THU && wget http://www.tnc.tohoku.ac.jp/ -O $(date "+%Y%m%d-%H%M") -o wget.log'
+TIT_cmd = 'mkdir -p TIT && cd TIT && wget https://admissions.titech.ac.jp/examination/ -O $(date "+%Y%m%d-%H%M") -q'
+UO_cmd = 'mkdir -p UO && cd UO && wget https://www.osaka-u.ac.jp/ja/admissions/faculty -O $(date "+%Y%m%d-%H%M") -q'
+SU_cmd = 'mkdir -p SU && cd SU && wget http://www.saitama-u.ac.jp/entrance/requirements/ -O $(date "+%Y%m%d-%H%M") -q'
+KU_cmd = 'mkdir -p KU && cd KU && wget https://www.keio.ac.jp/ja/admissions/ -O $(date "+%Y%m%d-%H%M") -q'
+THU_cmd = 'mkdir -p THU && cd THU && wget http://www.tnc.tohoku.ac.jp/ -O $(date "+%Y%m%d-%H%M") -q'
 
 TIT_flag = False
 UO_flag = False
