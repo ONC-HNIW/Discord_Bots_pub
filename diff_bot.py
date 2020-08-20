@@ -158,10 +158,10 @@ async def on_message(message):
       
       find = 'find tmp/TIT -type f -a  -amin -35'
       data = subprocess.check_output(find.split())
-      rep = '期間 : ' + data.decode().splitlines()[0] + ' ' + 'から' + ' ' + data.decode().splitlines()[1]
+      rep = '期間 : ' + data.decode().splitlines()[1] + ' ' + 'から' + ' ' + data.decode().splitlines()[0]
       await message.channel.send(rep)
 
-@tasks.loop(seconds=80)
+@tasks.loop(seconds=1800)
 async def loop():
     channel = client.get_channel(743522168478105649)
     
@@ -187,7 +187,7 @@ async def loop():
     
     find = 'find tmp/TIT -type f -a  -amin -35'
     data = subprocess.check_output(find.split())
-    rep = '期間 : ' + data.decode().splitlines()[0] + ' ' + 'から' + ' ' + data.decode().splitlines()[1]
+    rep = '期間 : ' + data.decode().splitlines()[1] + ' ' + 'から' + ' ' + data.decode().splitlines()[0]
     await channel.send(rep)
 
 
