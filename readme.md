@@ -1,0 +1,1 @@
+# University website update notification bot in Discord.
