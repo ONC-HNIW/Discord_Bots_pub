@@ -3,13 +3,15 @@ import os
 import discord
 from discord.ext import tasks
 
-TOKEN = ''
+import settings
 
-TIT_cmd = 'cd /home/ubuntu/web_index/TIT && wget https://admissions.titech.ac.jp/examination/ -O $(date "+%Y%m%d-%H%M") -o /home/ubuntu/wget.log'
-UO_cmd = 'cd /home/ubuntu/web_index/UO && wget https://www.osaka-u.ac.jp/ja/admissions/faculty -O $(date "+%Y%m%d-%H%M") -o /home/ubuntu/wget.log'
-SU_cmd = 'cd /home/ubuntu/web_index/SU && wget http://www.saitama-u.ac.jp/entrance/requirements/ -O $(date "+%Y%m%d-%H%M") -o /home/ubuntu/wget.log'
-KU_cmd = 'cd /home/ubuntu/web_index/KU && wget https://www.keio.ac.jp/ja/admissions/ -O $(date "+%Y%m%d-%H%M") -o /home/ubuntu/wget.log'
-THU_cmd = 'cd /home/ubuntu/web_index/THU && wget http://www.tnc.tohoku.ac.jp/ -O $(date "+%Y%m%d-%H%M") -o /home/ubuntu/wget.log'
+TOKEN = settings.BOT_TOKEN
+
+TIT_cmd = 'mkdir -p TIT && cd TIT && wget https://admissions.titech.ac.jp/examination/ -O $(date "+%Y%m%d-%H%M") -o wget.log'
+UO_cmd = 'mkdir -p UO && cd UO && wget https://www.osaka-u.ac.jp/ja/admissions/faculty -O $(date "+%Y%m%d-%H%M") -o wget.log'
+SU_cmd = 'mkdir -p SU && cd SU && wget http://www.saitama-u.ac.jp/entrance/requirements/ -O d -o wget.log'
+KU_cmd = 'mkdir -p KU && cd KU && wget https://www.keio.ac.jp/ja/admissions/ -O $(date "+%Y%m%d-%H%M") -o wget.log'
+THU_cmd = 'mkdir -p THU && cd THU && wget http://www.tnc.tohoku.ac.jp/ -O $(date "+%Y%m%d-%H%M") -o wget.log'
 
 TIT_flag = False
 UO_flag = False
@@ -55,7 +57,7 @@ def diff():
     print('error5')
 	
   #diff in TIT directory
-  TIT_find = 'find /home/ubuntu/web_index/TIT -type f -a  -amin -35'
+  TIT_find = 'find TIT -type f -a  -amin -35'
   TIT_data = subprocess.check_output(TIT_find.split())
   TIT_diff_cmd = 'diff' + ' ' + TIT_data.decode().splitlines()[0] + ' ' + TIT_data.decode().splitlines()[1]
   try:
@@ -68,7 +70,7 @@ def diff():
     print('1_diff!')
 
   #diff in UO directory
-  UO_find = 'find /home/ubuntu/web_index/UO -type f -a  -amin -35'
+  UO_find = 'find UO -type f -a  -amin -35'
   UO_data = subprocess.check_output(UO_find.split())
   UO_diff_cmd = 'diff' + ' ' + UO_data.decode().splitlines()[0] + ' ' + UO_data.decode().splitlines()[1]
   try:
@@ -81,7 +83,7 @@ def diff():
     print('2_diff!')
 
   #diff in SU directory
-  SU_find = 'find /home/ubuntu/web_index/SU -type f -a  -amin -35'
+  SU_find = 'find SU -type f -a  -amin -35'
   SU_data = subprocess.check_output(SU_find.split())
   SU_diff_cmd = 'diff' + ' ' + SU_data.decode().splitlines()[0] + ' ' + SU_data.decode().splitlines()[1]
   try:
@@ -94,7 +96,7 @@ def diff():
     print('3_diff!')
 
   #diff in KU directory
-  KU_find = 'find /home/ubuntu/web_index/KU -type f -a  -amin -35'
+  KU_find = 'find KU -type f -a  -amin -35'
   KU_data = subprocess.check_output(KU_find.split())
   KU_diff_cmd = 'diff' + ' ' + KU_data.decode().splitlines()[0] + ' ' + KU_data.decode().splitlines()[1]
   try:
@@ -107,7 +109,7 @@ def diff():
     print('4_diff!')
 
   #diff in THU directory
-  THU_find = 'find /home/ubuntu/web_index/THU -type f -a  -amin -35'
+  THU_find = 'find THU -type f -a  -amin -35'
   THU_data = subprocess.check_output(THU_find.split())
   THU_diff_cmd = 'diff' + ' ' + THU_data.decode().splitlines()[0] + ' ' + THU_data.decode().splitlines()[1]
   try:
@@ -152,7 +154,7 @@ async def on_message(message):
       if THU_flag == False and KU_flag == False and SU_flag == False and UO_flag == False and TIT_flag == False:
         await message.channel.send('各大学ホームページに更新はありません')
       
-      find = 'find /home/ubuntu/web_index/TIT -type f -a  -amin -35'
+      find = 'find TIT -type f -a  -amin -35'
       data = subprocess.check_output(find.split())
       rep = '期間 : ' + data.decode().splitlines()[0] + ' ' + 'から' + ' ' + data.decode().splitlines()[1]
       await message.channel.send(rep)
@@ -181,7 +183,7 @@ async def loop():
     if THU_flag == False and KU_flag == False and SU_flag == False and UO_flag == False and TIT_flag == False:
       await channel.send('各大学ホームページに更新はありません')
     
-    find = 'find /home/ubuntu/web_index/TIT -type f -a  -amin -35'
+    find = 'find TIT -type f -a  -amin -35'
     data = subprocess.check_output(find.split())
     rep = '期間 : ' + data.decode().splitlines()[0] + ' ' + 'から' + ' ' + data.decode().splitlines()[1]
     await channel.send(rep)
